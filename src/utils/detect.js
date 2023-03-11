@@ -1,5 +1,6 @@
 import * as tf from "@tensorflow/tfjs";
 import { renderBoxes } from "./renderBox";
+let vid;
 
 /**
  * Preprocess image / frame before forwarded into the model
@@ -9,6 +10,7 @@ import { renderBoxes } from "./renderBox";
  * @returns input tensor, xRatio and yRatio
  */
 const preprocess = (source, modelWidth, modelHeight) => {
+
   let xRatio, yRatio; // ratios for boxes
 
   const input = tf.tidy(() => {
@@ -74,6 +76,8 @@ export const detectVideo = (vidSource, model, classThreshold, canvasRef) => {
    * Function to detect every frame from video
    */
   const detectFrame = async () => {
+    vid = vidSource;
+
     if (vidSource.videoWidth === 0 && vidSource.srcObject === null) {
       const ctx = canvasRef.getContext("2d");
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // clean canvas
@@ -101,3 +105,6 @@ export const detectVideo = (vidSource, model, classThreshold, canvasRef) => {
 
   detectFrame(); // initialize to detect every frame
 };
+
+
+export { vid }

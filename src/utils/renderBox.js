@@ -1,5 +1,6 @@
 import labels from "./labels.json";
 
+
 /**
  * Render prediction boxes
  * @param {HTMLCanvasElement} canvasRef canvas tag reference
@@ -19,7 +20,6 @@ export const renderBoxes = (
 ) => {
   const ctx = canvasRef.getContext("2d");
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // clean canvas
-
   const colors = new Colors();
 
   // font configs
@@ -29,6 +29,10 @@ export const renderBoxes = (
   )}px Arial`;
   ctx.font = font;
   ctx.textBaseline = "top";
+
+
+
+
 
   for (let i = 0; i < scores_data.length; ++i) {
     // filter based on class threshold

@@ -1,6 +1,10 @@
 import * as tf from "@tensorflow/tfjs";
 import { renderBoxes } from "./renderBox";
+// import { sendBoxes } from "./sketch";
+
+
 let vid;
+let p5boxes;
 
 /**
  * Preprocess image / frame before forwarded into the model
@@ -88,14 +92,22 @@ export const detectVideo = (vidSource, model, classThreshold, canvasRef) => {
     const [input, xRatio, yRatio] = preprocess(vidSource, modelWidth, modelHeight);
 
     await model.net.executeAsync(input).then((res) => {
-      const [boxes, scores, classes] = res.slice(0, 3);
-      const boxes_data = boxes.dataSync();
-      const scores_data = scores.dataSync();
-      const classes_data = classes.dataSync();
+      let [boxes, scores, classes] = res.slice(0, 3);
+      let boxes_data = boxes.dataSync();
+      let scores_data = scores.dataSync();
+      let classes_data = classes.dataSync();
+      p5boxes = [boxes.dataSync(), scores.dataSync(), classes.dataSync(), [
+        xRatio,
+        yRatio,
+      ]];
+
       renderBoxes(canvasRef, classThreshold, boxes_data, scores_data, classes_data, [
         xRatio,
         yRatio,
       ]); // render boxes
+
+
+
       tf.dispose(res); // clear memory
     });
 
@@ -106,5 +118,5 @@ export const detectVideo = (vidSource, model, classThreshold, canvasRef) => {
   detectFrame(); // initialize to detect every frame
 };
 
-
 export { vid }
+export { p5boxes }

@@ -5,7 +5,9 @@ import Loader from "./components/loader";
 import ButtonHandler from "./components/btn-handler";
 // import { detectImage, detectVideo } from "./utils/detect";
 import { detectVideo } from "./utils/detect";
-import { sketch } from "./utils/sketch";
+
+// import { sketch } from "./utils/sketch";
+import Sketch from "react-p5";
 
 import "./style/App.css";
 
@@ -21,10 +23,22 @@ const App = () => {
   const cameraRef = useRef(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  let p5CnvElt;
 
   // model configs
   const modelName = "yolov5n";
   const classThreshold = 0.5;
+
+  // p5 stuff
+  const setup = (p5, canvasParentRef) => {
+    let p5Cnv = p5.createCanvas(500, 400).parent(canvasParentRef)
+    canvasRef.current = p5Cnv.elt;
+
+  }
+  
+  const draw = p5 => {
+    p5.ellipse(p5.mouseX, 100, 100)
+  }
 
   useEffect(() => {
     tf.ready().then(async () => {
@@ -54,8 +68,6 @@ const App = () => {
 
   return (
 
-
-
     <div className="App">
       {loading.loading && <Loader>Loading model... {(loading.progress * 100).toFixed(2)}%</Loader>}
       <div className="header">
@@ -70,28 +82,28 @@ const App = () => {
 
 
       <div className="content">
-        <img
+        {/* <img
           src="#"
           ref={imageRef}
           onLoad={() => detectImage(imageRef.current, model, classThreshold, canvasRef.current)}
-        />
+        /> */}
         <video
           autoPlay
           muted
           ref={cameraRef}
           onPlay={() => detectVideo(cameraRef.current, model, classThreshold, canvasRef.current)}
         />
-        <video
+        {/* <video
           autoPlay
           muted
           ref={videoRef}
           onPlay={() => detectVideo(videoRef.current, model, classThreshold, canvasRef.current)}
-        />
-        <canvas width={model.inputShape[1]} height={model.inputShape[2]} ref={canvasRef} />
+        /> */}
+        {/* <canvas width={model.inputShape[1]} height={model.inputShape[2]} ref={canvasRef} /> */}
+        <Sketch setup={setup} draw={draw} />
       </div>
 
-      <ButtonHandler imageRef={imageRef} cameraRef={cameraRef} videoRef={videoRef} />
-
+      <ButtonHandler cameraRef={cameraRef}/>
 
       
     </div>

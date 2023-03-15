@@ -74,6 +74,7 @@ export const detectImage = async (imgSource, model, classThreshold, canvasRef) =
  * @param {HTMLCanvasElement} canvasRef canvas reference
  */
 export const detectVideo = (vidSource, model, classThreshold, canvasRef) => {
+  console.log(canvasRef);
   const [modelWidth, modelHeight] = model.inputShape.slice(1, 3); // get model width and height
 
   /**

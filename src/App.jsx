@@ -31,14 +31,24 @@ const App = () => {
 
   // p5 stuff
   const setup = (p5, canvasParentRef) => {
-    let p5Cnv = p5.createCanvas(500, 400).parent(canvasParentRef)
+    let p5Cnv = p5.createCanvas(540, 960).parent(canvasParentRef)
+    // let vid = p5.createVideo("https://player.vimeo.com/progressive_redirect/playback/703953872/rendition/540p/file.mp4?loc=external&signature=c31792e363314faf98119a3beac10454b4b36578c6e59a254803d03fbe44dfad")
+    p5.background(220); 
     canvasRef.current = p5Cnv.elt;
 
   }
   
   const draw = p5 => {
-    p5.ellipse(p5.mouseX, 100, 100)
+    // p5.image(videoRef.current,0,0); 
+    // console.log(videoRef.current.src == ""); 
+    if (videoRef.current.src != "") p5.image(videoRef.current,0,0); 
+
+    p5.ellipse(p5.mouseX, p5.mouseY, 100, 100); 
+    
   }
+
+
+
 
   useEffect(() => {
     tf.ready().then(async () => {
@@ -93,17 +103,17 @@ const App = () => {
           ref={cameraRef}
           onPlay={() => detectVideo(cameraRef.current, model, classThreshold, canvasRef.current)}
         />
-        {/* <video
+        <video
           autoPlay
           muted
           ref={videoRef}
           onPlay={() => detectVideo(videoRef.current, model, classThreshold, canvasRef.current)}
-        /> */}
+        />
         {/* <canvas width={model.inputShape[1]} height={model.inputShape[2]} ref={canvasRef} /> */}
         <Sketch setup={setup} draw={draw} />
       </div>
 
-      <ButtonHandler cameraRef={cameraRef}/>
+      <ButtonHandler cameraRef={cameraRef} videoRef={videoRef} />
 
       
     </div>

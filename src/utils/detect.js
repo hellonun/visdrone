@@ -73,9 +73,9 @@ export const detectImage = async (imgSource, model, classThreshold, canvasRef) =
  * @param {Number} classThreshold class threshold
  * @param {HTMLCanvasElement} canvasRef canvas reference
  */
-export const detectVideo = (vidSource, model, classThreshold, canvasRef) => {
+export const detectVideo = (vidSource, model, classThreshold, canvasRef, p5Boxes) => {
   // console.log(canvasRef);
-  console.log(model)
+  console.log(vidSource)
   const [modelWidth, modelHeight] = model.inputShape.slice(1, 3); // get model width and height
 
   /**
@@ -103,12 +103,12 @@ export const detectVideo = (vidSource, model, classThreshold, canvasRef) => {
       //   yRatio,
       // ]];
 
-      renderBoxes(canvasRef, classThreshold, boxes_data, scores_data, classes_data, [
-        xRatio,
-        yRatio,
-      ]); // render boxes
-
-
+      // console.log(boxes_data);
+      p5Boxes.current = boxes_data
+      // renderBoxes(canvasRef, classThreshold, boxes_data, scores_data, classes_data, [
+      //   xRatio,
+      //   yRatio,
+      // ]); // render boxes
 
       tf.dispose(res); // clear memory
     });

@@ -23,7 +23,7 @@ const App = () => {
   const cameraRef = useRef(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-  let p5CnvElt;
+  const p5Video = useRef(null);
 
   // model configs
   const modelName = "yolov5n";
@@ -31,24 +31,41 @@ const App = () => {
 
   // p5 stuff
   const setup = (p5, canvasParentRef) => {
-    let p5Cnv = p5.createCanvas(540, 960).parent(canvasParentRef)
+    let p5Cnv = p5.createCanvas(640, 640).parent(canvasParentRef)
     // let vid = p5.createVideo("https://player.vimeo.com/progressive_redirect/playback/703953872/rendition/540p/file.mp4?loc=external&signature=c31792e363314faf98119a3beac10454b4b36578c6e59a254803d03fbe44dfad")
     p5.background(220); 
     canvasRef.current = p5Cnv.elt;
-
+    
+    p5Video.current = p5.createVideo(`${window.location.origin}/small.mp4`, vidLoad)
   }
   
   const draw = p5 => {
     // p5.image(videoRef.current,0,0); 
-    // console.log(videoRef.current.src == ""); 
-    if (videoRef.current.src != "") p5.image(videoRef.current,0,0); 
+    // console.log(videoRef.current.src == "");
+    // console.log(videoRef.current);
+    if (videoRef.current && videoRef.current.src != "") {
+      // console.log(p5Video.current);
+      p5.image(p5Video.current,0,0);
+      if (p5.frameCount % 60 == 0) {
+        console.log(videoRef.current);
+        detectVideo(videoRef.current, model, classThreshold, canvasRef.current)
+      }
+    }
 
-    p5.ellipse(p5.mouseX, p5.mouseY, 100, 100); 
-    
+    p5.ellipse(p5.mouseX, p5.mouseY, 100, 100);
+
   }
 
-
-
+  const vidLoad = () => {
+    console.log("yo");
+    // p5Video.loop();
+    p5Video.current.elt.autoplay = true;
+    p5Video.current.elt.muted = true;
+    videoRef.current = p5Video.current.elt;
+    // p5Video.current.elt.onplay = () => {detectVideo(videoRef.current, model, classThreshold, canvasRef.current)}
+    p5Video.current.hide()
+    p5Video.current.size(640, 640)
+  }
 
   useEffect(() => {
     tf.ready().then(async () => {
@@ -72,7 +89,11 @@ const App = () => {
         net: yolov5,
         inputShape: yolov5.inputs[0].shape,
       }); // set model & input shape
+      console.log(yolov5.inputs[0].shape);
     });
+
+
+
   }, []);
 
 
@@ -106,7 +127,7 @@ const App = () => {
         <video
           autoPlay
           muted
-          ref={videoRef}
+          // ref={videoRef}
           onPlay={() => detectVideo(videoRef.current, model, classThreshold, canvasRef.current)}
         />
         {/* <canvas width={model.inputShape[1]} height={model.inputShape[2]} ref={canvasRef} /> */}

@@ -3,8 +3,8 @@ import { renderBoxes } from "./renderBox";
 // import { sendBoxes } from "./sketch";
 
 
-let vid;
-let p5boxes;
+// let vid;
+// let p5boxes;
 
 /**
  * Preprocess image / frame before forwarded into the model
@@ -74,14 +74,15 @@ export const detectImage = async (imgSource, model, classThreshold, canvasRef) =
  * @param {HTMLCanvasElement} canvasRef canvas reference
  */
 export const detectVideo = (vidSource, model, classThreshold, canvasRef) => {
-  console.log(canvasRef);
+  // console.log(canvasRef);
+  console.log(model)
   const [modelWidth, modelHeight] = model.inputShape.slice(1, 3); // get model width and height
 
   /**
    * Function to detect every frame from video
    */
   const detectFrame = async () => {
-    vid = vidSource;
+    // vid = vidSource;
 
     if (vidSource.videoWidth === 0 && vidSource.srcObject === null) {
       const ctx = canvasRef.getContext("2d");
@@ -97,10 +98,10 @@ export const detectVideo = (vidSource, model, classThreshold, canvasRef) => {
       let boxes_data = boxes.dataSync();
       let scores_data = scores.dataSync();
       let classes_data = classes.dataSync();
-      p5boxes = [boxes.dataSync(), scores.dataSync(), classes.dataSync(), [
-        xRatio,
-        yRatio,
-      ]];
+      // p5boxes = [boxes.dataSync(), scores.dataSync(), classes.dataSync(), [
+      //   xRatio,
+      //   yRatio,
+      // ]];
 
       renderBoxes(canvasRef, classThreshold, boxes_data, scores_data, classes_data, [
         xRatio,
@@ -119,5 +120,5 @@ export const detectVideo = (vidSource, model, classThreshold, canvasRef) => {
   detectFrame(); // initialize to detect every frame
 };
 
-export { vid }
-export { p5boxes }
+// export { vid }
+// export { p5boxes }
